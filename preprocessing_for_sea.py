@@ -81,14 +81,21 @@ def batch_split(data,batchsize):
     return batchdata
 
 
-def data_preprocessing(path):
+def data_preprocessing(path,split = True):
     trainpath = path + 'seadata.csv'
     testpath = path + 'seatest.csv'
     data = load_data(trainpath, testpath)
     duplicate_rate = 5
-    batchsize = 250
+    if split:
+        batchsize = 250
     # data = data_augmentation(data, batchsize=batchsize, duplicate_rate=duplicate_rate)
-    batchdata = batch_split(data, batchsize=batchsize)
+        batchdata = batch_split(data, batchsize=batchsize)
+    else:
+        batchdata = {}
+        batchdata["xtrain"] = data[0]
+        batchdata["ytrain"] = data[1]
+        batchdata["xtest"] = data[2]
+        batchdata["ytest"] = data[3]
     return batchdata
 
 
