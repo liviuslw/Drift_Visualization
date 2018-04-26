@@ -205,3 +205,48 @@ def model(batchdata,learning_rate=0.001, num_epochs=25000, Train=True):
             costs.append(minibatch_cost)
 
         return parameters, np.squeeze(costs)
+
+
+def instance_learning(batchdata,learning_rate=0.001, num_epochs=25000, Train=True):
+    """
+
+    :param batchdata:
+    :param learning_rate:
+    :param num_epochs:
+    :param Train:
+    :return:
+    """
+    ops.reset_default_graph()  # to be able to rerun the model without overwriting tf variables
+    tf.set_random_seed(1)  # to keep consistent results
+    seed = 3  # to keep consistent results
+    costs = []  # To keep track of the cost
+    n_x = batchdata["xtrain"].shape[1]
+    n_y = 2
+    X, Y = create_placeholders(n_x,n_y)
+    parameters = initialize_parameters(n_x,n_y)
+    Z = forward_propagation(X,parameters)
+    cost = compute_cost(Z,Y)
+
+    optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost)
+    init = tf.global_variables_initializer()
+
+    with tf.Session() as sess:
+        sess.run(init)
+
+        for samples in range(batchdata["xtrain"].shape[0]):
+            tmp_x = batchdata["xtrain"][samples,:].transpose()
+            tmp_y = batchdata["ytrain"][samples]
+            _, tmp = sess.run([optimizer, cost], feed_dict={X: batchdata["xtrain"][samples,:].reshape((n_x,1)),
+                                                            Y: batchdata["ytrain"][samples].reshape(1)})
+            # print tmp
+
+            if samples % 1000 == 0:
+                correct_prediction = tf.equal(tf.argmax(Z), Y)
+
+                # Calculate accuracy on the test set
+                accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
+
+                print ("Test Accuracy:", accuracy.eval({X: batchdata["xtest"].transpose(),Y: batchdata["ytest"]}))
+
+        parameters = sess.run(parameters)
+        return parameters, None
