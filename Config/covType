@@ -1,0 +1,5 @@
+{
+    "filepath":"realWorld/covType/",
+    "batchsize":200,
+    "windowsize":30
+}

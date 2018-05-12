@@ -1,0 +1,5 @@
+{
+    "filepath":"artificial/mixedDrift/",
+    "batchsize":100,
+    "windowsize":12
+}

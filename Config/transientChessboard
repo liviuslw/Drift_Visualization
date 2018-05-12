@@ -1,0 +1,6 @@
+{
+    "filepath":"artificial/chess/",
+    "batchsize":500,
+    "windowsize":10,
+    "classifier": "neural networks"
+}

@@ -1,0 +1,19 @@
+{
+    "filepath":"hyperplane/",
+    "batchsize":250,
+    "layers":[10,2,2,2],
+    "num_epochs":30000,
+    "learning_rate": 0.01,
+    "axesrange":{
+        "xmin":0,
+        "xmax":1,
+        "ymin":0,
+        "ymax":1
+    },
+    "zaxesrange":{
+        "xmin":0,
+        "xmax":1,
+        "ymin":0,
+        "ymax":1
+    }
+}
