@@ -140,7 +140,7 @@ class ANNModel:
         tf.set_random_seed(1)  # to keep consistent results
         seed = 3  # to keep consistent results
         m, n_x = batchdata[0]['xtrain'].shape # (n_x: input size, m : number of examples in the train set)
-        n_y = 2 # n_y : output size
+        n_y = len(set(batchdata[0]['ytrain'])) # n_y : output size
         costs = []  # To keep track of the cost
         out_prob_collect = []
         # Create Placeholders of shape (n_x, n_y)
@@ -202,7 +202,7 @@ class ANNModel:
             # plt.plot(out_prob)
             # plt.show()
             print ("Parameters have been trained!")
-
+            print ("Train Accuracy on batch {0}:").format(accuracy.eval({X: batchdata[0]['xtrain'].transpose(),Y: batchdata[0]['ytrain']}))
 
             # predict decision boundaries
             # build static plot
@@ -218,8 +218,8 @@ class ANNModel:
             tmp = np.c_[xx.ravel(), yy.ravel()]
             tmp2 = np.zeros((tmp.shape[0], 1))
             input_data = np.concatenate((tmp,tmp2), axis=1)
-            y_pred = sess.run(Y_pred,feed_dict={X:np.transpose(input_data)})
-
+            # y_pred = sess.run(Y_pred,feed_dict={X:np.transpose(input_data)})
+            y_pred = None
             # transform features
             for timestep in range(0,len(batchdata),1):
                 minibatch_prob = sess.run(Z2,feed_dict={X: batchdata[timestep]['xtest'].transpose(),Y: batchdata[timestep]['ytest']})

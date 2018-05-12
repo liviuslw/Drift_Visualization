@@ -4,7 +4,7 @@
 """
 
 
-import ANN
+from ANN import ANNModel
 import preprocessing_for_sea as pd
 import time
 from pandas import DataFrame
@@ -18,7 +18,7 @@ def main():
     # print "total time step: %d" %(len(batchdata))
 
     start = time.clock()
-    model = ANN.ANNModel()
+    model = ANNModel()
     z,decision_bound = model.model(batchdata)
     visualize_out_prob(z,batchdata,decision_bound)
     end = time.clock()

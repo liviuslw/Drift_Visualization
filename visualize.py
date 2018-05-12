@@ -7,15 +7,31 @@ import numpy as np
 import preprocessing_for_sea as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 from matplotlib.animation import FuncAnimation
 from pandas import DataFrame
 import seaborn
 
-def visualize_out_prob(out_prob,batchdata,decision_bound):
-    animation_with_label(out_prob,batchdata,decision_bound)
+
+def getClassColors():
+    """
+    Returns various different colors.
+    """
+    return np.array(['#000080', '#ACE600', '#00CC01', '#2F2F2F', '#8900CC', '#0099CC',
+                     '#915200', '#D9007E', '#FFCCCC', '#5E6600', '#FFFF00', '#999999',
+                     '#FF6000', '#00FF00', '#FF00FF', '#00FFFF', '#FFFF0F', '#F0CC01',
+                     '#9BC6ED', '#915200',
+                     '#0000FF', '#FF0000', '#00CC01', '#2F2F2F', '#8900CC', '#0099CC',
+                     '#ACE600', '#D9007E', '#FFCCCC', '#5E6600', '#FFFF00', '#999999',
+                     '#FF6000', '#00FF00', '#FF00FF', '#00FFFF', '#FFFF0F', '#F0CC01',
+                     '#9BC6ED', '#FFA500'])
 
 
-def animation_with_label(out_prob,batchdata,decision_bound):
+def visualize_out_prob(out_prob,batchdata,decision_bound,parameters=None):
+    animation_with_label(out_prob,batchdata,decision_bound,parameters)
+
+
+def animation_with_label(out_prob,batchdata,decision_bound,parameters=None):
 
 
     # build plot
@@ -29,11 +45,18 @@ def animation_with_label(out_prob,batchdata,decision_bound):
 
 
     # plot points
-    cm_dark = mpl.colors.ListedColormap(['navy', 'orange'])
-    sca = ax.scatter(x[:, 0], x[:, 1], c=y.ravel(), s=40, cmap=cm_dark)
+    cm_dark = mpl.colors.ListedColormap(getClassColors())
+    sca = ax.scatter(x[:, 0], x[:, 1], c=y.ravel(), s=15, cmap=cm_dark)
     ax.set_title('time step {0}'.format(0))
     ax.set_xlabel('Z1')
     ax.set_ylabel('Z2')
+    # if parameters:
+    #     xmin = parameters["zaxesrange"]["xmin"]
+    #     xmax = parameters["zaxesrange"]["xmax"]
+    #     ymin = parameters["zaxesrange"]["ymin"]
+    #     ymax = parameters["zaxesrange"]["ymax"]
+    #     ax.set_xlim(xmin,xmax)
+    #     ax.set_ylim(ymin,ymax)
 
     # build dynamic plot
     def update(i):
@@ -57,14 +80,22 @@ def animation_with_label(out_prob,batchdata,decision_bound):
     # build static plot
     x2 = batchdata[0]["xtrain"]
     y2 = batchdata[0]["ytrain"]
-    cm_dark = mpl.colors.ListedColormap(['navy', 'orange'])
-    sca2 = ax2.scatter(x2[:, 0], x2[:, 1], c=y2.ravel(), s=40, cmap=cm_dark)
+    cm_dark = mpl.colors.ListedColormap(getClassColors())
+    sca2 = ax2.scatter(x2[:, 0], x2[:, 1], c=y2.ravel(), s=15, cmap=cm_dark)
     ax2.set_title('time step {0}'.format(0))
     ax2.set_xlabel('X1')
     ax2.set_ylabel('X2')
+    if parameters:
+        xmin = parameters["axesrange"]["xmin"]
+        xmax = parameters["axesrange"]["xmax"]
+        ymin = parameters["axesrange"]["ymin"]
+        ymax = parameters["axesrange"]["ymax"]
+        ax2.set_xlim(xmin,xmax)
+        ax2.set_ylim(ymin,ymax)
+
     # plot decision boundary
-    xx,yy,Z = decision_bound
-    Z = Z.reshape(xx.shape)
+    # xx,yy,Z = decision_bound
+    # Z = Z.reshape(xx.shape)
     # ax2.contourf(xx, yy, Z, cmap=plt.cm.RdBu, alpha=0.3)
 
     # build dynamic plot
@@ -82,11 +113,14 @@ def animation_with_label(out_prob,batchdata,decision_bound):
         return sca2
     anim2 = FuncAnimation(fig, update2,frames= range(len(batchdata)),interval=100)
 
+    # Set up formatting for the movie files
+    writer = animation.writers(fps=60)
+    anim.save('data/hyperplane/z_plot.mp4', writer=writer)
+    anim2.save('data/hyperplane/x_plot.mp4',writer=writer)
+    # plt.show()
 
-    plt.show()
 
-
-def animation(batchdata):
+def animation(batchdata,parameters=None):
     # seaborn.set_style("whitegrid")
     # build plot
     fig, ax = plt.subplots()
@@ -94,8 +128,15 @@ def animation(batchdata):
     # build static plot
     x = batchdata[0]["xtrain"]
     y = batchdata[0]["ytrain"]
-    cm_dark = mpl.colors.ListedColormap(['r', 'g'])
-    sca = plt.scatter(x[:, 0], x[:, 1], c=y.ravel(), s=15, cmap=cm_dark)
+    cm_dark = mpl.colors.ListedColormap(getClassColors())
+    sca = ax.scatter(x[:, 0], x[:, 1], c=y.ravel(), s=40, cmap=cm_dark)
+    if parameters:
+        xmin = parameters["axesrange"]["xmin"]
+        xmax = parameters["axesrange"]["xmax"]
+        ymin = parameters["axesrange"]["ymin"]
+        ymax = parameters["axesrange"]["ymax"]
+        ax.set_xlim(xmin,xmax)
+        ax.set_ylim(ymin,ymax)
     plt.title('time step {0}'.format(0))
     # build dynamic plot
     def update(i):
