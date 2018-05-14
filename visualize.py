@@ -36,15 +36,14 @@ def animation_with_label(out_prob,batchdata,decision_bound,parameters=None):
 
 
     # build plot
-    fig, axes = plt.subplots(1,2)
-    ax,ax2 = axes.ravel()
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 2, 1)
+    ax2 = fig.add_subplot(1, 2, 2)
 
 
-    # build static plot
+    # build static plot for z
     x = out_prob[0]
     y = batchdata[0]["ytest"]
-
-
     # plot points
     cm_dark = mpl.colors.ListedColormap(getClassColors())
     sca = ax.scatter(x[:, 0], x[:, 1], c=y.ravel(), s=15, cmap=cm_dark)
@@ -59,26 +58,11 @@ def animation_with_label(out_prob,batchdata,decision_bound,parameters=None):
     #     ax.set_xlim(xmin,xmax)
     #     ax.set_ylim(ymin,ymax)
 
-    # build dynamic plot
-    def update(i):
-        # label = 'timestep {0}'.format(i)
-        # print(label)
-        x = out_prob[i]
-        y = batchdata[i]["ytest"]
-        data = [[x1,x2] for x1, x2 in zip(x[:,0],x[:,1])]
-        sca.set_offsets(data)
-        sca.set_array(y.ravel())
-        # cm_dark = mpl.colors.ListedColormap(['r', 'g'])
-        # plt.scatter(x[:, 0], x[:, 1], c=y.ravel(), s=40, cmap=cm_dark)
-        ax.set_title('time step {0}'.format(i))
-        return sca
-    anim = FuncAnimation(fig, update,frames= range(len(batchdata)),interval=100)
-
 
     # seaborn.set_style("whitegrid")
     # build plot
 
-    # build static plot
+    # build static plot for x
     x2 = batchdata[0]["xtrain"]
     y2 = batchdata[0]["ytrain"]
     cm_dark = mpl.colors.ListedColormap(getClassColors())
@@ -98,9 +82,18 @@ def animation_with_label(out_prob,batchdata,decision_bound,parameters=None):
     # xx,yy,Z = decision_bound
     # Z = Z.reshape(xx.shape)
     # ax2.contourf(xx, yy, Z, cmap=plt.cm.RdBu, alpha=0.3)
-
     # build dynamic plot
-    def update2(i):
+    def update(i):
+        # label = 'timestep {0}'.format(i)
+        # print(label)
+        x = out_prob[i]
+        y = batchdata[i]["ytest"]
+        data = [[x1,x2] for x1, x2 in zip(x[:,0],x[:,1])]
+        sca.set_offsets(data)
+        sca.set_array(y.ravel())
+        # cm_dark = mpl.colors.ListedColormap(['r', 'g'])
+        # plt.scatter(x[:, 0], x[:, 1], c=y.ravel(), s=40, cmap=cm_dark)
+        ax.set_title('time step {0}'.format(i))
         # label = 'timestep {0}'.format(i)
         # print(label)
         x2 = batchdata[i]["xtrain"]
@@ -111,13 +104,11 @@ def animation_with_label(out_prob,batchdata,decision_bound,parameters=None):
         # cm_dark = mpl.colors.ListedColormap(['r', 'g'])
         # plt.scatter(x[:, 0], x[:, 1], c=y.ravel(), s=40, cmap=cm_dark)
         ax2.set_title('time step {0}'.format(i))
-        return sca2
-    anim2 = FuncAnimation(fig, update2,frames= range(len(batchdata)),interval=100)
+    anim = FuncAnimation(fig, update,frames= range(len(batchdata)),interval=100)
 
     # Set up formatting for the movie files
-    # anim.save('data/hyperplane/z_plot.mp4', writer="ffmpeg")
-    # anim2.save('data/hyperplane/x_plot.mp4',writer="ffmpeg")
-    plt.show()
+    anim.save('data/hyperplane/zx_plot.mp4', writer="ffmpeg")
+    # plt.show()
 
 
 def animation(batchdata,parameters=None):
