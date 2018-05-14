@@ -15,7 +15,7 @@ def visualze_only(batchdata,parameters):
 
 def train_and_visualize(batchdata,parameters):
     model = ANNModel()
-    z, decision_bound = model.model(batchdata, learning_rate=parameters['learning_rate'],
+    z, decision_bound = model.model(batchdata, LEARNING_RATE=parameters['learning_rate'],
                                     num_epochs=parameters['num_epochs'])
     # visualize_out_prob(z, batchdata, decision_bound, parameters)
 
