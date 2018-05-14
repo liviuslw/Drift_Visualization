@@ -6,6 +6,7 @@
 import numpy as np
 import preprocessing_for_sea as pd
 import matplotlib as mpl
+mpl.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib.animation import FuncAnimation
