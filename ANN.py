@@ -1,7 +1,7 @@
 import preprocessing_for_sea as pd
 import tensorflow as tf
 from tensorflow.python.framework import ops
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import numpy as np
 
 class ANNModel:

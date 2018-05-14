@@ -20,8 +20,8 @@ def train_and_visualize(batchdata,parameters):
     visualize_out_prob(z, batchdata, decision_bound, parameters)
 
 def main():
-    # parameters = dp.dataset_config('movingSquares')
-    parameters = dp.dataset_config('rotatingHyperplane')
+    parameters = dp.dataset_config('movingSquares')
+    #parameters = dp.dataset_config('rotatingHyperplane')
     # data preprocessing including data reading, batch splitting and probable data augmenting
     batchdata = dp.data_preprocessing(parameters["outpath"], batchsize = parameters["batchsize"])
     train_and_visualize(batchdata,parameters)
