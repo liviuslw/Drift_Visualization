@@ -202,7 +202,7 @@ class ANNModel:
             # plt.plot(out_prob)
             # plt.show()
             print ("Parameters have been trained!")
-            print ("Train Accuracy on batch {0}:").format(accuracy.eval({X: batchdata[0]['xtrain'].transpose(),Y: batchdata[0]['ytrain']}))
+            print ("Train Accuracy on batch %.8f:"%(accuracy.eval({X: batchdata[0]['xtrain'].transpose(),Y: batchdata[0]['ytrain']})))
 
             # predict decision boundaries
             # build static plot
