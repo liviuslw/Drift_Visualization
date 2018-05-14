@@ -4,7 +4,7 @@
     "windowsize":12,
     "layers":[2,2,2,4],
     "num_epochs":50000,
-    "learning_rate": 0.01,
+    "learning_rate": 0.1,
     "axesrange":{
         "xmax":1.1,
         "xmin":-0.2,

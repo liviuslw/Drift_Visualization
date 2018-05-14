@@ -3,7 +3,7 @@
     "batchsize":250,
     "layers":[10,2,2,2],
     "num_epochs":30000,
-    "learning_rate": 0.01,
+    "learning_rate": 0.1,
     "axesrange":{
         "xmin":0,
         "xmax":1,

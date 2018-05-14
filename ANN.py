@@ -118,7 +118,7 @@ class ANNModel:
         return cost
 
 
-    def model(self,batchdata,learning_rate=0.001, num_epochs=25000, Train=True):
+    def model(self,batchdata,LEARNING_RATE=0.1, num_epochs=25000, Train=True):
         """
         Implements a three-layer tensorflow neural network: LINEAR->RELU->LINEAR->RELU->LINEAR->SOFTMAX.
 
@@ -148,7 +148,8 @@ class ANNModel:
 
         # Initialize parameters
         parameters = self.initialize_parameters(n_x,n_y)
-
+        global_step = tf.Variable(0)
+        learning_rate = tf.train.exponential_decay(LEARNING_RATE,global_step,1000,0.96,staircase=True)
 
         # Forward propagation: Build the forward propagation in the tensorflow graph
         Z3,Z2 = self.forward_propagation(X, parameters)
@@ -157,7 +158,7 @@ class ANNModel:
         cost = self.compute_cost(Z3, Y)
 
         # Backpropagation: Define the tensorflow optimizer. Use an AdamOptimizer.
-        optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(cost)
+        optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(cost,global_step=global_step)
 
         # Initialize all the variables
         init = tf.global_variables_initializer()
