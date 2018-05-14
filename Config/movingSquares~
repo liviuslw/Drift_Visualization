@@ -1,6 +1,0 @@
-{
-    "filepath":"artificial/movingSquares/",
-    "batchsize":20,
-    "windowsize":12,
-    "classifier":"SVM"
-}
