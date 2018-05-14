@@ -115,9 +115,8 @@ def animation_with_label(out_prob,batchdata,decision_bound,parameters=None):
     anim2 = FuncAnimation(fig, update2,frames= range(len(batchdata)),interval=100)
 
     # Set up formatting for the movie files
-    writer = animation.writers(fps=60)
-    anim.save('data/hyperplane/z_plot.mp4', writer=writer)
-    anim2.save('data/hyperplane/x_plot.mp4',writer=writer)
+    anim.save('data/hyperplane/z_plot.mp4', writer="ffmpeg")
+    anim2.save('data/hyperplane/x_plot.mp4',writer="ffmpeg")
     # plt.show()
 
 
