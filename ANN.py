@@ -181,11 +181,11 @@ class ANNModel:
 
 
                     # Calculate the correct predictions
-                    Y_pred = tf.argmax(Z3)
-                    correct_prediction = tf.equal(Y_pred, Y)
+                    #Y_pred = tf.argmax(Z3)
+                    #correct_prediction = tf.equal(Y_pred, Y)
 
                     # Calculate accuracy on the test set
-                    accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
+                    #accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
 
                     # print ("Train Accuracy:", accuracy.eval({X: batchdata['xtrain'].transpose(),Y: batchdata['ytrain']}))
                     # print ("Test Accuracy:", accuracy.eval({X: batchdata['xtest'].transpose(),Y: batchdata['ytest']}))
@@ -202,7 +202,7 @@ class ANNModel:
             # plt.plot(out_prob)
             # plt.show()
             print ("Parameters have been trained!")
-            print ("Train Accuracy on batch {0}:").format(accuracy.eval({X: batchdata[0]['xtrain'].transpose(),Y: batchdata[0]['ytrain']}))
+            #print ("Train Accuracy on batch {0}:").format(accuracy.eval({X: batchdata[0]['xtrain'].transpose(),Y: batchdata[0]['ytrain']}))
 
             # predict decision boundaries
             # build static plot
