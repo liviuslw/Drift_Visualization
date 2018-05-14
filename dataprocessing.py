@@ -58,7 +58,7 @@ def data_augmentation(data,batchsize,duplicate_rate):
 
 def batch_split(data,batchsize):
     x, y = data
-    batch = x.shape[0]/batchsize
+    batch = x.shape[0]//batchsize
     batchdata = []
     for i in range(batch-1):
         index = range(i*batchsize,(i+1)*batchsize)
