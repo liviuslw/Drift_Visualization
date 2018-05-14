@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib.animation import FuncAnimation
 from pandas import DataFrame
-import seaborn
+# import seaborn
 
 
 def getClassColors():
