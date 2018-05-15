@@ -33,7 +33,7 @@ class ANNModel:
         return self.X, self.Y
 
 
-    def initialize_parameters(self,n_x,n_y):
+    def initialize_parameters(self,layer_structure):
         """
         Initializes parameters to build a neural network with tensorflow. The shapes are:
                             W1 : [2, n_x]
@@ -46,23 +46,15 @@ class ANNModel:
         Returns:
         parameters -- a dictionary of tensors containing W1, b1, W2, b2, W3, b3
         """
-
-        tf.set_random_seed(1)  # so that your "random" numbers match ours
-        W1 = tf.get_variable("W1", [2, n_x], initializer=tf.truncated_normal_initializer(stddev=0.1))
-        b1 = tf.get_variable("b1", [2, 1], initializer=tf.zeros_initializer())
-        W2 = tf.get_variable("W2", [2, 2], initializer=tf.truncated_normal_initializer(stddev=0.1))
-        b2 = tf.get_variable("b2", [2, 1], initializer=tf.zeros_initializer())
-        W3 = tf.get_variable("W3", [n_y, 2], initializer=tf.truncated_normal_initializer(stddev=0.1))
-        b3 = tf.get_variable("b3", [n_y, 1], initializer=tf.zeros_initializer())
-
-
-        parameters = {"W1": W1,
-                      "b1": b1,
-                      "W2": W2,
-                      "b2": b2,
-                      "W3": W3,
-                      "b3": b3}
-
+        parameters = {}
+        tf.set_random_seed(1)
+        n_x = layer_structure[0]
+        n_y = layer_structure[-1]
+        for layers in range(len(layer_structure)-1):
+            parameters["W"+str(layers+1)] = tf.get_variable("W"+str(layers+1), [layer_structure[layers+1], layer_structure[layers]]
+                                                            , initializer=tf.truncated_normal_initializer(stddev=0.1))
+            parameters["b"+str(layers+1)] = tf.get_variable("b"+str(layers+1), [layer_structure[layers+1], 1],
+                                                            initializer=tf.zeros_initializer())
         return parameters
 
 
@@ -80,22 +72,20 @@ class ANNModel:
         """
 
         # Retrieve the parameters from the dictionary "parameters"
-        W1 = parameters['W1']
-        b1 = parameters['b1']
-        W2 = parameters['W2']
-        b2 = parameters['b2']
-        W3 = parameters['W3']
-        b3 = parameters['b3']
+        neurons = {}
+        neurons['Z1'] = tf.matmul(parameters['W1'], X) + parameters['b1']  # Z1 = np.dot(W1, X) + b1
+        neurons['A1'] = tf.nn.relu(neurons['Z1'])  # A1 = relu(Z1)
 
+        layers = len(parameters)//2
+        for layer in range(1,layers):
+            neurons['Z'+str(layer+1)] = tf.matmul(parameters['W'+str(layer+1)],neurons['A'+str(layer)]) \
+                                        + parameters['b'+str(layer+1)]
+            if layer != layers-1:
+                neurons['A'+str(layer+1)] = tf.nn.relu(neurons['Z'+str(layer+1)])
 
-        Z1 = tf.matmul(W1, X) + b1  # Z1 = np.dot(W1, X) + b1
-        A1 = tf.nn.relu(Z1)  # A1 = relu(Z1)
-        Z2 = tf.matmul(W2, A1) + b2  # Z2 = np.dot(W2, a1) + b2
-        A2 = tf.nn.relu(Z2)  # A2 = relu(Z2)
-        Z3 = tf.matmul(W3, A2) + b3  # Z3 = np.dot(W3,Z2) + b3
-
-
-        return Z3, Z2
+        output_layer = neurons['Z'+str(layers)]
+        fully_connect_layer = neurons['Z'+str(layer)]
+        return output_layer, fully_connect_layer, neurons
 
 
     def compute_cost(self,Z3, Y):
@@ -118,7 +108,7 @@ class ANNModel:
         return cost
 
 
-    def model(self,batchdata,LEARNING_RATE=0.1, num_epochs=25000, Train=True):
+    def model(self,batchdata,layer_structure,LEARNING_RATE=0.1, num_epochs=3000, Train=True):
         """
         Implements a three-layer tensorflow neural network: LINEAR->RELU->LINEAR->RELU->LINEAR->SOFTMAX.
 
@@ -139,23 +129,24 @@ class ANNModel:
         ops.reset_default_graph()  # to be able to rerun the model without overwriting tf variables
         tf.set_random_seed(1)  # to keep consistent results
         seed = 3  # to keep consistent results
-        m, n_x = batchdata[0]['xtrain'].shape # (n_x: input size, m : number of examples in the train set)
-        n_y = len(set(batchdata[0]['ytrain'])) # n_y : output size
+        m, _ = batchdata[0]['xtrain'].shape # (n_x: input size, m : number of examples in the train set)
+        n_x = layer_structure[0] # n_x: input size
+        n_y = layer_structure[-1] # n_y : output size
         costs = []  # To keep track of the cost
         out_prob_collect = []
         # Create Placeholders of shape (n_x, n_y)
         X, Y = self.create_placeholders(n_x, n_y)
 
         # Initialize parameters
-        parameters = self.initialize_parameters(n_x,n_y)
+        parameters = self.initialize_parameters(layer_structure)
         global_step = tf.Variable(0)
         learning_rate = tf.train.exponential_decay(LEARNING_RATE,global_step,1000,0.96,staircase=True)
 
         # Forward propagation: Build the forward propagation in the tensorflow graph
-        Z3,Z2 = self.forward_propagation(X, parameters)
+        output_layer,fully_connect_layer,neurons = self.forward_propagation(X, parameters)
 
         # Cost function: Add cost function to tensorflow graph
-        cost = self.compute_cost(Z3, Y)
+        cost = self.compute_cost(output_layer, Y)
 
         # Backpropagation: Define the tensorflow optimizer. Use an AdamOptimizer.
         optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(cost,global_step=global_step)
@@ -182,14 +173,14 @@ class ANNModel:
 
 
                     # Calculate the correct predictions
-                    Y_pred = tf.argmax(Z3,axis=0)
+                    Y_pred = tf.argmax(output_layer,axis=0)
                     correct_prediction = tf.equal(Y_pred, Y)
 
                     # Calculate accuracy on the test set
                     accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
 
                     # print ("Train Accuracy:", accuracy.eval({X: batchdata['xtrain'].transpose(),Y: batchdata['ytrain']}))
-                    # print ("Test Accuracy:", accuracy.eval({X: batchdata['xtest'].transpose(),Y: batchdata['ytest']}))
+                    print ("Test Accuracy:", accuracy.eval({X: batchdata[0]['xtest'].transpose(),Y: batchdata[0]['ytest']}))
 
             # plot the cost
             # plt.plot(np.squeeze(costs))
@@ -203,6 +194,8 @@ class ANNModel:
             # plt.plot(out_prob)
             # plt.show()
             print ("Parameters have been trained!")
+            parameters = sess.run(parameters)
+            neurons = sess.run(neurons,feed_dict={X: batchdata[0]['xtrain'].transpose(),Y: batchdata[0]['ytrain']})
             print ("Train Accuracy on batch %.8f:"%(accuracy.eval({X: batchdata[0]['xtrain'].transpose(),Y: batchdata[0]['ytrain']})))
 
             # predict decision boundaries
@@ -223,7 +216,7 @@ class ANNModel:
             y_pred = None
             # transform features
             for timestep in range(0,len(batchdata),1):
-                minibatch_prob = sess.run(Z2,feed_dict={X: batchdata[timestep]['xtest'].transpose(),Y: batchdata[timestep]['ytest']})
+                minibatch_prob = sess.run(fully_connect_layer,feed_dict={X: batchdata[timestep]['xtest'].transpose(),Y: batchdata[timestep]['ytest']})
                 out_prob_collect.append(minibatch_prob.transpose())
             return out_prob_collect, (xx, yy, y_pred)
 

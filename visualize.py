@@ -6,7 +6,7 @@
 import numpy as np
 import preprocessing_for_sea as pd
 import matplotlib as mpl
-mpl.use('Agg')
+# mpl.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib.animation import FuncAnimation
@@ -107,8 +107,8 @@ def animation_with_label(out_prob,batchdata,decision_bound,parameters=None):
     anim = FuncAnimation(fig, update,frames= range(len(batchdata)),interval=100)
 
     # Set up formatting for the movie files
-    anim.save('data/hyperplane/zx_plot.mp4', writer="ffmpeg")
-    # plt.show()
+    # anim.save('data/hyperplane/zx_plot.mp4', writer="ffmpeg")
+    plt.show()
 
 
 def animation(batchdata,parameters=None):

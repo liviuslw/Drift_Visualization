@@ -108,7 +108,8 @@ def dataset_config(name):
         "axesrange": jsonData['axesrange'],
         "zaxesrange": jsonData['zaxesrange'],
         "num_epochs": jsonData['num_epochs'],
-        "learning_rate":jsonData['learning_rate']
+        "learning_rate": jsonData['learning_rate'],
+        'layer_structure': jsonData['layers']
     }
 
     return parameters

@@ -19,8 +19,8 @@ def main():
 
     start = time.clock()
     model = ANNModel()
-    z,decision_bound = model.model(batchdata)
-    # visualize_out_prob(z,batchdata,decision_bound)
+    z,decision_bound = model.model(batchdata,layer_structure=[3,2,2,2])
+    visualize_out_prob(z,batchdata,decision_bound)
     end = time.clock()
     # print "time:%f"%(end-start)
     # pd.save_acc(acc)
