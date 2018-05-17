@@ -9,11 +9,21 @@ from pandas import DataFrame
 from numpy.random import randint
 import json
 from scipy.io import arff
-
+import os
 
 def load_data(datapath, labelpath):
-    x = pd.read_csv(datapath, sep=',| ', header=None,engine='python').values
-    y = np.squeeze(pd.read_csv(labelpath, sep=' ', header=None).values)
+    file_path = os.path.split(datapath)
+    if file_path[-1] == 'coverType.csv':
+        data = pd.read_csv(datapath, sep=',| ', header=None, engine='python').values
+        x = data[:,:-1]
+        y = data[:,-1]
+    else:
+        if file_path[-1] == 'elec2_data.dat':
+            data = pd.read_csv (datapath, sep=',| ', header=None,engine='python').values
+            x = data[:,np.array([1,2,4,5,6,7])]
+        else:
+            x = pd.read_csv (datapath, sep=',| ', header=None,engine='python').values
+        y = np.squeeze(pd.read_csv(labelpath, sep=' ', header=None).values)
     out = (x, y)
     return out
 
@@ -99,11 +109,10 @@ def dataset_config(name):
         xpath = filepath + 'elec2_data.dat'
         ypath = filepath + 'elec2_label.dat'
     if name == 'covType':
-        xpath = filepath + 'covType.arff'
+        xpath = filepath + 'coverType.csv'
         ypath = xpath
-
     parameters = {
-        "outpath":(xpath, ypath),
+        "outpath": (xpath, ypath),
         "batchsize": jsonData['batchsize'],
         "axesrange": jsonData['axesrange'],
         "zaxesrange": jsonData['zaxesrange'],

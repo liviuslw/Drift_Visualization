@@ -21,8 +21,14 @@ def train_and_visualize(batchdata,parameters):
 
 
 def main():
+    # parameters = dp.dataset_config('interchangingRBF')
     # parameters = dp.dataset_config('movingSquares')
-    parameters = dp.dataset_config('rotatingHyperplane')
+    # parameters = dp.dataset_config('rotatingHyperplane')
+    # parameters = dp.dataset_config('movingRBF')
+    # parameters = dp.dataset_config('weather')
+    # parameters = dp.dataset_config('Elec2')
+    # parameters = dp.dataset_config('covType')
+    parameters = dp.dataset_config('poker')
     # data preprocessing including data reading, batch splitting and probable data augmenting
     batchdata = dp.data_preprocessing(parameters["outpath"], batchsize = parameters["batchsize"])
     train_and_visualize(batchdata,parameters)

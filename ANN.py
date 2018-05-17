@@ -180,7 +180,7 @@ class ANNModel:
                     accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
 
                     # print ("Train Accuracy:", accuracy.eval({X: batchdata['xtrain'].transpose(),Y: batchdata['ytrain']}))
-                    print ("Test Accuracy:", accuracy.eval({X: batchdata[0]['xtest'].transpose(),Y: batchdata[0]['ytest']}))
+                    print ("Test Accuracy on batch0:", accuracy.eval({X: batchdata[0]['xtest'].transpose(),Y: batchdata[0]['ytest']}))
 
             # plot the cost
             # plt.plot(np.squeeze(costs))

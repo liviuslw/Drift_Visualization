@@ -6,7 +6,7 @@
 import numpy as np
 import preprocessing_for_sea as pd
 import matplotlib as mpl
-mpl.use('Agg')
+# mpl.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib.animation import FuncAnimation
@@ -18,11 +18,11 @@ def getClassColors():
     """
     Returns various different colors.
     """
-    return np.array(['#000080', '#ACE600', '#00CC01', '#2F2F2F', '#8900CC', '#0099CC',
-                     '#915200', '#D9007E', '#FFCCCC', '#5E6600', '#FFFF00', '#999999',
+    return np.array(['#000080', '#00CC01', '#ACE600', '#2F2F2F', '#8900CC', '#0099CC',
+                     '#00CC01','#915200', '#D9007E', '#FFCCCC', '#5E6600', '#FFFF00',
                      '#FF6000', '#00FF00', '#FF00FF', '#00FFFF', '#FFFF0F', '#F0CC01',
-                     '#9BC6ED', '#915200',
-                     '#0000FF', '#FF0000', '#00CC01', '#2F2F2F', '#8900CC', '#0099CC',
+                     '#9BC6ED', '#915200', '#999999',
+                     '#0000FF', '#FF0000',  '#2F2F2F', '#8900CC', '#0099CC',
                      '#ACE600', '#D9007E', '#FFCCCC', '#5E6600', '#FFFF00', '#999999',
                      '#FF6000', '#00FF00', '#FF00FF', '#00FFFF', '#FFFF0F', '#F0CC01',
                      '#9BC6ED', '#FFA500'])
@@ -70,13 +70,13 @@ def animation_with_label(out_prob,batchdata,decision_bound,parameters=None):
     ax2.set_title('time step {0}'.format(0))
     ax2.set_xlabel('X1')
     ax2.set_ylabel('X2')
-    if parameters:
-        xmin = parameters["axesrange"]["xmin"]
-        xmax = parameters["axesrange"]["xmax"]
-        ymin = parameters["axesrange"]["ymin"]
-        ymax = parameters["axesrange"]["ymax"]
-        ax2.set_xlim(xmin,xmax)
-        ax2.set_ylim(ymin,ymax)
+    # if parameters:
+    #     xmin = parameters["axesrange"]["xmin"]
+    #     xmax = parameters["axesrange"]["xmax"]
+    #     ymin = parameters["axesrange"]["ymin"]
+    #     ymax = parameters["axesrange"]["ymax"]
+    #     ax2.set_xlim(xmin,xmax)
+    #     ax2.set_ylim(ymin,ymax)
 
     # plot decision boundary
     # xx,yy,Z = decision_bound
@@ -107,7 +107,7 @@ def animation_with_label(out_prob,batchdata,decision_bound,parameters=None):
     anim = FuncAnimation(fig, update,frames= range(len(batchdata)),interval=100)
 
     # Set up formatting for the movie files
-    anim.save('data/hyperplane/zx_plot.mp4', writer="ffmpeg")
+    # anim.save('data/hyperplane/zx_plot.mp4', writer="ffmpeg")
     plt.show()
 
 
