@@ -114,11 +114,12 @@ def dataset_config(name):
     parameters = {
         "outpath": (xpath, ypath),
         "batchsize": jsonData['batchsize'],
-        "axesrange": jsonData['axesrange'],
-        "zaxesrange": jsonData['zaxesrange'],
-        "num_epochs": jsonData['num_epochs'],
         "learning_rate": jsonData['learning_rate'],
-        'layer_structure': jsonData['layers']
+        'layer_structure': jsonData['layers'],
+        "num_epochs": jsonData['num_epochs'],
+        "plot_xaxis": jsonData['plot_xaxis'],
+        "axesrange": jsonData['axesrange'],
+        "zaxesrange": jsonData['zaxesrange']
     }
 
     return parameters

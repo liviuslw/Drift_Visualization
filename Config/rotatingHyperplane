@@ -4,6 +4,7 @@
     "layers":[10,2,2,2],
     "num_epochs":3000,
     "learning_rate": 0.1,
+    "plot_xaxis":[4,7],
     "axesrange":{
         "xmin":0,
         "xmax":1,
@@ -11,9 +12,9 @@
         "ymax":1
     },
     "zaxesrange":{
-        "xmin":0,
-        "xmax":1,
-        "ymin":0,
-        "ymax":1
+        "xmin":-0.015,
+        "xmax":0.005,
+        "ymin":-1.5,
+        "ymax":4.5
     }
 }

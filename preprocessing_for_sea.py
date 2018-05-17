@@ -123,4 +123,4 @@ def data_preprocessing(path, train_batchsize = 0, test_batchsize = 0):
 
 def save_acc(acc):
     pd = DataFrame(acc)
-    pd.to_csv('Result/sea/MDDT_broadscale.csv',header=False,index=False)
+    pd.to_csv('heap_map.csv',header=False,index=False)

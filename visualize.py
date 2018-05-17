@@ -11,7 +11,8 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from matplotlib.animation import FuncAnimation
 from pandas import DataFrame
-# import seaborn
+import seaborn as sns
+from preprocessing_for_sea import save_acc
 
 
 def getClassColors():
@@ -66,17 +67,17 @@ def animation_with_label(out_prob,batchdata,decision_bound,parameters=None):
     x2 = batchdata[0]["xtrain"]
     y2 = batchdata[0]["ytrain"]
     cm_dark = mpl.colors.ListedColormap(getClassColors())
-    sca2 = ax2.scatter(x2[:, 0], x2[:, 1], c=y2.ravel(), s=15, cmap=cm_dark)
+    sca2 = ax2.scatter(x2[:, parameters['plot_xaxis'][0]], x2[:, parameters['plot_xaxis'][1]], c=y2.ravel(), s=15, cmap=cm_dark)
     ax2.set_title('time step {0}'.format(0))
     ax2.set_xlabel('X1')
     ax2.set_ylabel('X2')
-    # if parameters:
-    #     xmin = parameters["axesrange"]["xmin"]
-    #     xmax = parameters["axesrange"]["xmax"]
-    #     ymin = parameters["axesrange"]["ymin"]
-    #     ymax = parameters["axesrange"]["ymax"]
-    #     ax2.set_xlim(xmin,xmax)
-    #     ax2.set_ylim(ymin,ymax)
+    if parameters:
+        xmin = parameters["axesrange"]["xmin"]
+        xmax = parameters["axesrange"]["xmax"]
+        ymin = parameters["axesrange"]["ymin"]
+        ymax = parameters["axesrange"]["ymax"]
+        ax2.set_xlim(xmin,xmax)
+        ax2.set_ylim(ymin,ymax)
 
     # plot decision boundary
     # xx,yy,Z = decision_bound
@@ -98,7 +99,8 @@ def animation_with_label(out_prob,batchdata,decision_bound,parameters=None):
         # print(label)
         x2 = batchdata[i]["xtrain"]
         y2 = batchdata[i]["ytrain"]
-        data2 = [[x1,x3] for x1, x3 in zip(x2[:,0],x2[:,1])]
+        data2 = [[x1,x3] for x1, x3 in zip(x2[:,parameters['plot_xaxis'][0]],
+                                           x2[:,parameters['plot_xaxis'][1]])]
         sca2.set_offsets(data2)
         sca2.set_array(y2.ravel())
         # cm_dark = mpl.colors.ListedColormap(['r', 'g'])
@@ -143,6 +145,23 @@ def animation(batchdata,parameters=None):
         plt.title('time step {0}'.format(i))
         return sca
     anim = FuncAnimation(fig, update,frames= range(len(batchdata)),interval=200)
+    plt.show()
+
+
+def heap_map_plot(batchdata):
+    x = batchdata["xtrain"]
+    y = batchdata["ytrain"]
+    y = y.reshape((y.shape[0],1))
+    data = np.concatenate((x,y),axis = 1)
+    cm = np.corrcoef(data.transpose())
+    # save_acc(cm)
+    hm = sns.heatmap(cm,
+                     cbar=True,
+                     annot=True,
+                     square=True,
+                     fmt='.2f',
+                     annot_kws={'size':15},
+                     )
     plt.show()
 
 
