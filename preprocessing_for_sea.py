@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
- pre-processing on sea data set
+ pre-processing on sea Data set
 """
 
 import pandas as pd
@@ -50,7 +50,7 @@ def data_augmentation(data,batchsize,duplicate_rate):
     ytest_aug = np.zeros((ytest.shape[0]*duplicate_rate))
 
 
-    # replicate data within every batch
+    # replicate Data within every batch
 
     rand_ind = []
     # generate index sequence for many times
@@ -110,7 +110,7 @@ def data_preprocessing(path, train_batchsize = 0, test_batchsize = 0):
         data = load_data_withclass(trainpath,train_label_path,testpath,test_label_path)
     duplicate_rate = 5
     if train_batchsize or test_batchsize:
-    # data = data_augmentation(data, batchsize=batchsize, duplicate_rate=duplicate_rate)
+    # Data = data_augmentation(Data, batchsize=batchsize, duplicate_rate=duplicate_rate)
         batchdata = batch_split(data, train_split_size=train_batchsize,test_split_size=test_batchsize)
     else:
         batchdata = {}
