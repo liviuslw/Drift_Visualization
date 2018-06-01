@@ -18,7 +18,7 @@ def animation(accuracy):
     # build static plot
     ax.set_xlim(1,200)
     ax.set_ylim(min(accuracy)-0.1,1)
-    curve, = plt.plot([],[],lw=3,c='navy')
+    curve, = plt.plot([],[],lw=1.5,c='navy')
     plt.plot([],[],lw=2,c='red')
     ax.set_xlabel('time step')
     ax.set_ylabel('accuracy values')
@@ -37,6 +37,7 @@ def animation(accuracy):
         if i == len(accuracy):
             plt.pause(10)
     anim = FuncAnimation(fig, update,frames= range(1,len(accuracy)+1),interval=50)
+    anim.save('visualize by acc.mp4', writer="ffmpeg")
     plt.show()
 
 
